@@ -20,6 +20,41 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Bluetooth Permission required for Diagnosing the bluetooth hardware</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Bluetooth Permission required for Diagnosing the bluetooth hardware</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Calendar Usage permission Required for Resume test time</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera permission required to check both cameras</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Contacts Permission required to fetch user contacts</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Face Id access required to test FaceId functionality</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Gather location updates to get SSID information and assist customer to schedule order pick up</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Gather location updates to get SSID information and assist customer to schedule order pick up</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Gather location updates to get SSID information and assist customer to schedule order pick up</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Gather location updates to get SSID information and assist customer to schedule order pick up</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Microphone permission required to check the Mic and Speaker</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Photo library access required to save a picture clicked by you</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo library access required to save a picture clicked by you</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Roboto-Regular.ttf</string>
+		<string>Roboto-Medium.ttf</string>
+		<string>Roboto-Bold.ttf</string>
+		<string>Supply-Regular.otf</string>
+		<string>Supply-Medium.otf</string>
+		<string>Supply-Bold.otf</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -34,7 +69,7 @@
 					<key>UISceneDelegateClassName</key>
 					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
 					<key>UISceneStoryboardFile</key>
-					<string>Main</string>
+					<string>InstaCash</string>
 				</dict>
 			</array>
 		</dict>
@@ -44,11 +79,13 @@
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
+	<string>InstaCash</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -62,5 +99,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>

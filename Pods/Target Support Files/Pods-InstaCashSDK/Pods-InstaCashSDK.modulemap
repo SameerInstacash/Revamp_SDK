@@ -1,0 +1,6 @@
+framework module Pods_InstaCashSDK {
+  umbrella header "Pods-InstaCashSDK-umbrella.h"
+
+  export *
+  module * { export * }
+}
