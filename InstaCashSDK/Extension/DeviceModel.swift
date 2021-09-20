@@ -53,6 +53,12 @@ public extension UIDevice {
         case "iPhone13,3":                              return "iPhone 12 Pro"
         case "iPhone13,4":                              return "iPhone 12 Pro Max"
             
+        case "iPhone14,4":                              return "iPhone 13 Mini"
+        case "iPhone14,5":                              return "iPhone 13"
+        case "iPhone14,2":                              return "iPhone 13 Pro"
+        case "iPhone14,3":                              return "iPhone 13 Pro Max"
+            
+            
         //iPad
         case "iPad1,1", "iPad1,2":                      return "iPad (1st generation)"
         case "iPad2,1", "iPad2,2", "iPad2,3", "iPad2,4":return "iPad (2nd generation)"

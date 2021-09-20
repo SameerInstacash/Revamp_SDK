@@ -113,36 +113,94 @@ class BiometricVC: UIViewController {
                 }
             }else {
                 
-                self.testImgView.image = #imageLiteral(resourceName: "fingerprint")
-                
-                self.showAlert(title: self.getLocalizatioStringValue(key: "Error"), message: self.getLocalizatioStringValue(key: "Biometric not working"), alertButtonTitles: [self.getLocalizatioStringValue(key: "OK")], alertButtonStyles: [.default], vc: self) { (index) in
+                DispatchQueue.main.async {
                     
-                    SDKResultJSON[SDK_BiometricTestKey].int = 0
-                    SDKUserDefaults.setValue(false, forKey: SDK_BiometricTestKey)
-                     
-                    if !SDKResultString.contains("CISS12;") {
-                        SDKResultString = SDKResultString + "CISS12;"
+                    let alertController = UIAlertController (title: self.getLocalizatioStringValue(key: "Enable Biometric") , message: self.getLocalizatioStringValue(key: "Go to Settings -> Touch ID & Passcode"), preferredStyle: .alert)
+                    
+                    let settingsAction = UIAlertAction(title: self.getLocalizatioStringValue(key: "Settings"), style: .default) { (_) -> Void in
+                        
+                        guard let settingsUrl = URL(string: "App-Prefs:root") else {
+                            return
+                        }
+                        
+                        if UIApplication.shared.canOpenURL(settingsUrl) {
+                            if #available(iOS 10.0, *) {
+                                
+                                UIApplication.shared.open(settingsUrl, options: [:]) { (success) in
+                                    
+                                }
+                                
+                            } else {
+                                // Fallback on earlier versions
+                                
+                                UIApplication.shared.openURL(settingsUrl)
+                            }
+                        }
                     }
                     
-                    SDKUserDefaults.setValue(true, forKey: SDK_BiometricCompleteKey)
-                    SDKUserDefaults.removeObject(forKey: SDK_TestLeftTimeKey)
+                    alertController.addAction(settingsAction)
                     
-                    if self.isComingFromDiagnosticTestResult {
+                    let cancelAction = UIAlertAction(title: self.getLocalizatioStringValue(key: "Cancel"), style: .default) { (_) -> Void in
                         
-                        guard let didFinishRetryDiagnosis = SDKdidFinishRetryDiagnosis else { return }
-                        didFinishRetryDiagnosis()
-                        self.dismiss(animated: false, completion: nil)
+                        SDKResultJSON[SDK_BiometricTestKey].int = 0
+                        SDKUserDefaults.setValue(false, forKey: SDK_BiometricTestKey)
+                         
+                        if !SDKResultString.contains("CISS12;") {
+                            SDKResultString = SDKResultString + "CISS12;"
+                        }
+                        
+                        SDKUserDefaults.setValue(true, forKey: SDK_BiometricCompleteKey)
+                        SDKUserDefaults.removeObject(forKey: SDK_TestLeftTimeKey)
+                        
+                        if self.isComingFromDiagnosticTestResult {
+                            
+                            guard let didFinishRetryDiagnosis = SDKdidFinishRetryDiagnosis else { return }
+                            didFinishRetryDiagnosis()
+                            self.dismiss(animated: false, completion: nil)
+                            
+                        }
+                        else{
+                            
+                            guard let didFinishTestDiagnosis = SDKdidFinishTestDiagnosis else { return }
+                            didFinishTestDiagnosis()
+                            self.dismiss(animated: false, completion: nil)
+                            
+                        }
                         
                     }
-                    else{
-                        
-                        guard let didFinishTestDiagnosis = SDKdidFinishTestDiagnosis else { return }
-                        didFinishTestDiagnosis()
-                        self.dismiss(animated: false, completion: nil)
-                        
-                    }
+                    
+                    alertController.addAction(cancelAction)
+                    
+                    alertController.popoverPresentationController?.sourceView = self.view
+                    alertController.popoverPresentationController?.sourceRect = self.view.bounds
+                    
+                    self.present(alertController, animated: true, completion: nil)
                     
                 }
+                
+                
+                //*
+                switch UIDevice.current.currentModelName {
+                case "iPhone X","iPhone XR","iPhone XS","iPhone XS Max","iPhone 11","iPhone 11 Pro","iPhone 11 Pro Max","iPhone 12 mini","iPhone 12","iPhone 12 Pro","iPhone 12 Pro Max", "iPhone 13 Mini", "iPhone 13", "iPhone 13 Pro", "iPhone 13 Pro Max", "iPad Pro (11-inch) (1st generation)", "iPad Pro (11-inch) (2nd generation)", "iPad Pro (12.9-inch) (3rd generation)", "iPad Pro (12.9-inch) (4th generation)" :
+                    
+                    print("hello faceid available")
+                    // device supports face id recognition.
+                    
+                    self.testImgView.image = #imageLiteral(resourceName: "face-id")
+                    
+                    self.headingLbl.text = self.getLocalizatioStringValue(key: "Checking Face-Id")
+                    self.headingLbl.font = UIFont.init(name: SDKFontMedium, size: self.headingLbl.font.pointSize)
+                    self.subHeading1Lbl.text = self.getLocalizatioStringValue(key: "First, enable the face-Id function on your phone")
+                    self.subHeading1Lbl.font = UIFont.init(name: SDKFontRegular, size: self.subHeading1Lbl.font.pointSize)
+                    self.subHeading2Lbl.text = self.getLocalizatioStringValue(key: "During the test place your face on the scanner as you normally would to unlock your phone")
+                    self.subHeading2Lbl.font = UIFont.init(name: SDKFontRegular, size: self.subHeading2Lbl.font.pointSize)
+                    
+                    break
+                default:
+                    
+                    break
+                }
+                //*/
                 
             }
             
