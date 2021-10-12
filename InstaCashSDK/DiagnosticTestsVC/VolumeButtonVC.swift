@@ -38,6 +38,7 @@ class VolumeButtonVC: UIViewController {
         
         DispatchQueue.main.async {
             self.setUIElementsProperties()
+            self.listenVolumeButton()
         }
         
     }
@@ -45,7 +46,6 @@ class VolumeButtonVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.listenVolumeButton()
         AppOrientationUtility.lockOrientation(.portrait)
     }
     

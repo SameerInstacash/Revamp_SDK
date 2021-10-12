@@ -28,6 +28,7 @@ class SpeakerVC: UIViewController, UITextFieldDelegate {
     var soundFiles = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
     var audioPlayer: AVAudioPlayer!
     
+    let audioSession = AVAudioSession.sharedInstance()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -97,6 +98,7 @@ class SpeakerVC: UIViewController, UITextFieldDelegate {
         if sender.titleLabel?.text == self.getLocalizatioStringValue(key: "Start").uppercased() {
             sender.setTitle(self.getLocalizatioStringValue(key: "Submit").uppercased(), for: .normal)
             
+            self.configureAudioSessionCategory()
             self.startTest()
           
         }else {
@@ -209,6 +211,20 @@ class SpeakerVC: UIViewController, UITextFieldDelegate {
     }
     
     //MARK:- Custom Methods
+    func configureAudioSessionCategory() {
+        print("Configuring audio session")
+        do {
+            //try audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
+            try audioSession.setCategory(AVAudioSession.Category.playAndRecord)
+            try audioSession.setActive(true)
+            try audioSession.overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
+            print("AVAudio Session out options: ", audioSession.currentRoute)
+            print("Successfully configured audio session.")
+        } catch (let error) {
+            print("Error while configuring audio session: \(error)")
+        }
+    }
+    
     func startTest() {
         
         let randomSoundFile = Int(arc4random_uniform(UInt32(soundFiles.count)))
@@ -218,6 +234,17 @@ class SpeakerVC: UIViewController, UITextFieldDelegate {
         guard let filePath = Bundle.main.path(forResource: self.soundFiles[randomSoundFile], ofType: "wav") else {
             return
         }
+        
+        
+        // This is to audio output from bottom (main) speaker
+        do {
+            try audioSession.overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
+            try audioSession.setActive(true)
+            print("Successfully configured audio session (SPEAKER-Bottom).", "\nCurrent audio route: ",audioSession.currentRoute.outputs)
+        } catch let error as NSError {
+            print("#configureAudioSessionToSpeaker Error \(error.localizedDescription)")
+        }
+        
         
         do {
             self.audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: filePath))

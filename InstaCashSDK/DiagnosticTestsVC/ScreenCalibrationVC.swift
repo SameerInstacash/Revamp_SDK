@@ -38,7 +38,8 @@ class ScreenCalibrationVC: UIViewController {
     var audioPlayer: AVAudioPlayer!
     var recording: Recording!
     
-    var recordingSession: AVAudioSession!
+    //var recordingSession: AVAudioSession!
+    var audioSession = AVAudioSession.sharedInstance()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,6 +53,7 @@ class ScreenCalibrationVC: UIViewController {
         
         DispatchQueue.main.async {
             if SDKTestsPerformArray.contains("speaker") {
+                self.configureAudioSessionCategory()
                 self.checkAudio()
                 
                 if let index = SDKTestsPerformArray.firstIndex(of: "speaker") {
@@ -462,7 +464,18 @@ class ScreenCalibrationVC: UIViewController {
         
     }
     
-    
+    func configureAudioSessionCategory() {
+      print("Configuring audio session")
+      do {
+        try audioSession.setCategory(AVAudioSession.Category.playAndRecord)
+        try audioSession.setActive(true)
+        try audioSession.overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
+        print("AVAudio Session out options: ", audioSession.currentRoute)
+        print("Successfully configured audio session.")
+      } catch (let error) {
+        print("Error while configuring audio session: \(error)")
+      }
+    }
     
     func checkAudio() {
         
@@ -471,7 +484,18 @@ class ScreenCalibrationVC: UIViewController {
             
             return
         }
-      
+        
+        
+        // This is to audio output from bottom (main) speaker
+        do {
+            try self.audioSession.overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
+            try self.audioSession.setActive(true)
+            print("Successfully configured audio session (SPEAKER-Bottom).", "\nCurrent audio route: ",self.audioSession.currentRoute.outputs)
+        } catch let error as NSError {
+            print("#configureAudioSessionToSpeaker Error \(error.localizedDescription)")
+        }
+        
+        
         do {
             
             self.audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: filePath))
@@ -480,7 +504,7 @@ class ScreenCalibrationVC: UIViewController {
             let outputVol = AVAudioSession.sharedInstance().outputVolume
             print("Device volume is: \(outputVol)")
             
-            if(outputVol > 0.36) {
+            if(outputVol > 0.20) {
                 
                 SDKUserDefaults.setValue(true, forKey: SDK_SpeakerTestKey)
                 SDKResultJSON[SDK_SpeakerTestKey].int = 1
@@ -506,7 +530,6 @@ class ScreenCalibrationVC: UIViewController {
             
             print(error.localizedDescription)
         }
-
         
     }
     
@@ -514,13 +537,13 @@ class ScreenCalibrationVC: UIViewController {
         
         // Recording audio requires a user's permission to stop malicious apps doing malicious things, so we need to request recording permission from the user.
         
-        recordingSession = AVAudioSession.sharedInstance()
+        self.audioSession = AVAudioSession.sharedInstance()
 
         do {
-            try recordingSession.setCategory(AVAudioSession.Category.playAndRecord)
-            try recordingSession.setActive(true)
+            try self.audioSession.setCategory(AVAudioSession.Category.playAndRecord)
+            try self.audioSession.setActive(true)
             
-            recordingSession.requestRecordPermission() { [unowned self] allowed in
+            self.audioSession.requestRecordPermission() { [unowned self] allowed in
                 DispatchQueue.main.async {
                     if allowed {
                         //self.createRecorder()

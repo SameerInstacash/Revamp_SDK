@@ -306,7 +306,7 @@ class DiagnoseVC: UIViewController {
 
     // MARK:- IBActions
     @IBAction func startButtonPressed(_ sender: UIButton) {
-        
+      
         if let SDKExpire = SDKLicenseLeft {
             if SDKExpire > 0 {
                 self.NavigateToNextTestVC()
